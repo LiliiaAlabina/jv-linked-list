@@ -37,9 +37,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
+            Node<T> current;
+            if (index > size / 2) {
+                current = findNodeByIndexResers(index);
+            } else {
+                current = findNodeByIndex(index);
             }
             Node<T> newNode = new Node<>(current.prev, value, current);
             current.prev.next = newNode;
@@ -78,9 +80,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.value = value;
             return oldValue;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
+            Node<T> current;
+            if (index > size / 2) {
+                current = findNodeByIndexResers(index);
+            } else {
+                current = findNodeByIndex(index);
             }
             T oldValue = current.value;
             current.value = value;
@@ -113,9 +117,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = null;
             return oldValue;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
+            Node<T> current;
+            if (index > size / 2) {
+                current = findNodeByIndexResers(index);
+            } else {
+                current = findNodeByIndex(index);
             }
             T oldValue = current.value;
             unlink(current);
@@ -175,13 +181,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    public void checkIndexForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
     }
 
-    public void checkIndexFor(int index) {
+    private void checkIndexFor(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -189,6 +195,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean isEquals(Object a, Object b) {
         return a == b || (a != null && a.equals(b));
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> findNodeByIndexResers(int index) {
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        return current;
     }
 
     private static class Node<T> {
@@ -204,6 +226,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.prev = prev;
             this.next = next;
+        }
+
+        public Node() {
         }
     }
 }
